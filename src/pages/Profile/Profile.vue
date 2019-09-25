@@ -3,19 +3,22 @@
     <header-top title="我的"></header-top>
     <section class="profile-number">
       <router-link
-        to="/login"
+        :to="userInfo._id ? 'userInfo' : '/login'"
         class="profile-link"
       >
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
+          <p
+            class="user-info-top"
+            v-if="!userInfo.phone"
+          >{{userInfo.name || '登录/注册'}}</p>
           <p>
             <span class="user-icon">
               <i class="iconfont icon-shouji icon-mobile"></i>
             </span>
-            <span class="icon-mobile-number">暂无绑定手机号</span>
+            <span class="icon-mobile-number">{{userInfo.phone || '暂无绑定手机号'}}</span>
           </p>
         </div>
         <span class="arrow">
@@ -115,10 +118,14 @@
   </section>
 </template>
 <script>
+import { mapState } from "vuex";
 import HeaderTop from "../../components/HeaderTop/HeaderTop.vue";
 export default {
   components: {
     HeaderTop
+  },
+  computed: {
+    ...mapState(["userInfo"])
   }
 };
 </script>
@@ -127,7 +134,8 @@ export default {
 
 .profile {
   width: 100%;
-  overflow hidden
+  overflow: hidden;
+
   .profile-number {
     margin-top: 45.5px;
 
@@ -158,6 +166,7 @@ export default {
         margin-left: 15px;
 
         p {
+          display: block;
           font-weight: 700;
           font-size: 18px;
           color: #fff;
@@ -175,11 +184,14 @@ export default {
 
             .icon-mobile {
               font-size: 30px;
-              vertical-align: text-top;
             }
           }
 
           .icon-mobile-number {
+            display: inline-block;
+            position relative
+            top: -7px;
+            align-items: center;
             font-size: 14px;
             color: #fff;
           }
